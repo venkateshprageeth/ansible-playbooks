@@ -1,0 +1,23 @@
+---
+
+- hosts: webserver
+  name: configuring apache webserver
+  tasks:
+   - name: installing apache package
+     yum:
+      name: ["httpd","httpd-manual"]
+      state: "present"
+   - name: starting apache service
+     service:
+      name: "httpd"
+      state: "started"
+   - name: copying index file to apache location
+     copy:
+      src: "index.html"
+      dest: "/var/www/html"
+     notify: restarting the service
+  handlers:
+   - name: restarting the service
+     service:
+      name: "httpd"
+      state: "restarted"
